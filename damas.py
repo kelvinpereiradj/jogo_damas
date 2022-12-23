@@ -8,7 +8,7 @@ class Pedra():
         self.pedra_dono_inicial = pedra_dono_inicial
         self.pedra_dono = pedra_dono_inicial
         self.nome = nome
-        self.pedra_ocupando_casa = "nao"
+        self.pedra_ocupando_casa = None
 
     def pedra_ocupar_casa(self, casa):
         self.pedra_ocupando_casa = casa
@@ -24,7 +24,7 @@ class Casa():
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.nome = "nao"
+        self.nome = None
         self.casa_ocupada = None 
         self.casa_ocupavel = None
 
@@ -38,9 +38,9 @@ class Casa():
         self.nome = str(self.x)+"_"+str(self.y)
 
 class Tabuleiro():
-    def __init__(self, altura, largura):
-        self.altura = altura
+    def __init__(self, largura, altura):
         self.largura = largura
+        self.altura = altura
         self.casas = []
         self.casas_ocupaveis = None
         self.casas_nao_ocupaveis = None
@@ -65,13 +65,13 @@ class Tabuleiro():
         return list(i.nome for i in self.casas if i.casa_ocupada == None)
 
     def casas_criar(self):
-        for i in range(1, self.altura +1):
-            for j in range(1, self.largura +1):
-                casa = Casa(x = i, y = j)
+        for altura in range(1, self.altura +1):
+            for largura in range(1, self.largura +1):
+                casa = Casa(x = largura, y = altura)
                 casa.casa_nomear()
                 casa.casa_se_desocupar()
-                a = bool(i%2)
-                b = bool(j%2)
+                a = bool(largura%2)
+                b = bool(altura%2)
                 if a==b:
                     casa.casa_ocupavel = True
                 else:
@@ -87,10 +87,11 @@ class Tabuleiro():
         self.casas_nao_ocupaveis = list(i for i in self.casas if i.casa_ocupavel == False)
 
 class Jogador():
-    def __init__(self, nome, pedras_quantidade):
+    def __init__(self, nome, pedras_quantidade, movimento_y):
         self.nome = nome
         self.pedras_quantidade = pedras_quantidade
         self.pedras = []
+        self.movimento_y = movimento_y
 
     def pedras_criar(self):
         for i in range(1, self.pedras_quantidade +1):
@@ -133,39 +134,52 @@ class Jogador():
         print(len(tabuleiro_casas_ocupaveis_vazias_nomes))
         print(tabuleiro_casas_ocupaveis_vazias_nomes)
 
+
         while True:
-            jogar_da_casa = input("jogada da casa x_y: ")   
-            if jogar_da_casa in jogador_pedras_casas_nomes:
-                print(jogar_da_casa)
-                break
-            elif jogar_da_casa not in tabuleiro_casas_nomes:
+            jogar_da_casa_nome = input("jogada da casa x_y: ")  
+            if jogar_da_casa_nome not in tabuleiro_casas_nomes:
                 print("Casa não existe no tabuleiro!")
-            elif jogar_da_casa in adversario_pedras_casas_nomes:
+            elif jogar_da_casa_nome in adversario_pedras_casas_nomes:
                 print("Pedra do adversário!")
-            elif jogar_da_casa in tabuleiro_casas_vazias_nomes:
-                print("Casa vazia!")
+            elif jogar_da_casa_nome in tabuleiro_casas_vazias_nomes:
+                print("Casa vazia!") 
+            elif jogar_da_casa_nome in jogador_pedras_casas_nomes:
+                jogar_da_casa_executar = list({i for i in tabuleiro.casas if i.nome==jogar_da_casa_nome})[0]
+                a, b, c = jogar_da_casa_executar.x + 1, jogar_da_casa_executar.x-1, jogar_da_casa_executar.y + self.movimento_y
+                print(a, b, c)
+                d = [f"{a}_{c}", f"{b}_{c}"]
+                print(d)
+                e = list(i for i in d if i in tabuleiro_casas_ocupaveis_vazias_nomes)
+                print(e)
+                if len(e)>0:
+                    print(jogar_da_casa_nome)
+                    break
+                else:
+                    print("Não é possível mover essa sua peça!")
 
         
         while True:
-            jogar_para_casa = input("jogada para a casa x_y: ")
-            if jogar_para_casa in jogador_pedras_casas_nomes:
-                print("Casa ocupada por outra pedra sua!")
-            elif jogar_para_casa not in tabuleiro_casas_nomes:
-                print("Casa não existe no tabuleiro!")
-            elif jogar_para_casa in adversario_pedras_casas_nomes:
-                print("Casa ocupada por uma pedra do adversário!") 
-            elif jogar_para_casa in tabuleiro.casas_nao_ocupaveis:
-                print("Nenhuma pedra pode ficar nessa casa!")
-            elif jogar_para_casa in tabuleiro_casas_vazias_nomes:
-                print(jogar_para_casa)
+            jogar_para_casa_nome = input("jogada para a casa x_y: ")
+            if jogar_para_casa_nome not in e:
+                if jogar_para_casa_nome not in tabuleiro_casas_nomes:
+                    print("Casa não existe no tabuleiro!")
+                elif jogar_para_casa_nome in adversario_pedras_casas_nomes:
+                    print("Casa ocupada por uma pedra do adversário!") 
+                elif jogar_para_casa_nome in tabuleiro.casas_nao_ocupaveis:
+                    print("Nenhuma pedra pode ficar nessa casa!")
+            else:
+                print(jogar_para_casa_nome)
                 break
 
 
-        pedra_escolhida = list({i for i in self.pedras if i.pedra_ocupando_casa.nome==jogar_da_casa})[0]
-        jogar_da_casa = list({i for i in tabuleiro.casas if i.nome==jogar_da_casa})[0]
-        jogar_para_casa = list({i for i in tabuleiro.casas if i.nome==jogar_para_casa})[0] 
+        pedra_escolhida_executar = list({i for i in self.pedras if i.pedra_ocupando_casa.nome==jogar_da_casa_nome})[0]
+        jogar_para_casa_executar = list({i for i in tabuleiro.casas if i.nome==jogar_para_casa_nome})[0] 
 
-        self.jogador_pedra_mover(pedra=pedra_escolhida, jogar_da_casa=jogar_da_casa, jogar_para_casa=jogar_para_casa)
+        self.jogador_pedra_mover(
+            pedra=pedra_escolhida_executar, 
+            jogar_da_casa=jogar_da_casa_executar, 
+            jogar_para_casa=jogar_para_casa_executar
+        )
 
     def jogador_pedra_mover(self, pedra, jogar_da_casa, jogar_para_casa):
         pedra.pedra_se_mudar(casa_antiga=jogar_da_casa, casa_nova=jogar_para_casa)
@@ -186,7 +200,11 @@ def jogadores_criar():
     a = 0
     while a<2:
         a += 1
-        jogador = Jogador(nome = "jogador_"+str(a), pedras_quantidade = 12)
+        if a == 1:
+            y = 1
+        else:
+            y = -1
+        jogador = Jogador(nome = "jogador_"+str(a), pedras_quantidade = 12, movimento_y = y)
         jogador.pedras_criar()
         jogadores.append(jogador)
     return jogadores
