@@ -40,7 +40,7 @@ class Casa():
         self.__class__.instancias.append(self)
 
     def casa_se_desocupar(self):
-        self.casa_ocupada = ""
+        self.casa_ocupada = "nao"
 
     def casa_se_ocupar(self, pedra):
         self.casa_ocupada = pedra
@@ -53,19 +53,12 @@ class Casa():
 
     @staticmethod
     def casas_pedras(casas):
-        a = []
-        b = Casa.instancias
-        for i in casas:
-            if i in b:
-                a.append(i)
-            else:
-                a.append(False)
         c = []
-        for j in a:
-            if j:
-                c.append(j.casa_ocupada)
+        for i in casas:
+            if i != "False":
+                c.append(i.casa_ocupada)
             else:
-                c.append(False)
+                c.append("False")
         return c
 
 
@@ -77,7 +70,7 @@ class Casa():
             if i in a:
                 b.append(i)
             else:
-                b.append(False)
+                b.append("False")
         return b
 
     @staticmethod
@@ -89,13 +82,13 @@ class Casa():
             if i in a:
                 b.append(i)
             else:
-                b.append(False)
+                b.append("False")
         for j in b:
-            if j != False:
-                c = list(i for i in Casa.instancias if i.casa_nome in b)[0]
-                d.append(c)
-            else:
-                d.append(False)
+            for k in Casa.instancias:
+                if k.casa_nome==j:
+                    d.append(k)
+            if j=="False":
+                d.append("False")      
         return d
 
     @staticmethod
@@ -103,14 +96,11 @@ class Casa():
         casas_n = Casa.casas_nomes_casas(casas_nomes)
         a = []
         for i in casas_n:
-            if i != False:
-                #print(i.casa_ocupada)
+            if i != "False":
                 b = i.casa_ocupada
                 a.append(b)
-                #print(b)
             else:
-                a.append(False)
-                #print(False)
+                a.append("False")
         return a
 
 
@@ -126,7 +116,7 @@ class Tabuleiro():
 
     def tabuleiro_casas_ocupaveis_vazias(self):
         aa = self.tabuleiro_casas_vazias()
-        a = list(i for i in aa if i.casa_ocupavel == True)
+        a = list(i for i in aa if i.casa_ocupavel == "sim")
         return a
 
     def tabuleiro_casas_ocupaveis_vazias_nomes(self):
@@ -138,10 +128,10 @@ class Tabuleiro():
         return list(i.casa_nome for i in self.tabuleiro_casas)
     
     def tabuleiro_casas_vazias(self):
-        return list(i for i in self.tabuleiro_casas if i.casa_ocupada == "")
+        return list(i for i in self.tabuleiro_casas if i.casa_ocupada == "nao")
 
     def tabuleiro_casas_vazias_nomes(self):
-        return list(i.casa_nome for i in self.tabuleiro_casas if i.casa_ocupada == "")
+        return list(i.casa_nome for i in self.tabuleiro_casas if i.casa_ocupada == "nao")
 
     def tabuleiro_casas_criar(self):
         for altura in range(1, self.tabuleiro_altura +1):
@@ -152,18 +142,18 @@ class Tabuleiro():
                 a = bool(largura%2)
                 b = bool(altura%2)
                 if a==b:
-                    casa.casa_ocupavel = True
+                    casa.casa_ocupavel = "sim"
                 else:
-                    casa.casa_ocupavel = False
+                    casa.casa_ocupavel = "nao"
                 self.tabuleiro_casas.append(casa)
         self.tabuleiro_casas_ocupaveis_criar()
         self.tabuleiro_casas_nao_ocupaveis_criar()
         
     def tabuleiro_casas_ocupaveis_criar(self,):   
-        self.tabuleiro_casas_ocupaveis = list(i for i in self.tabuleiro_casas if i.casa_ocupavel == True )
+        self.tabuleiro_casas_ocupaveis = list(i for i in self.tabuleiro_casas if i.casa_ocupavel == "sim" )
 
     def tabuleiro_casas_nao_ocupaveis_criar(self,):   
-        self.tabuleiro_casas_nao_ocupaveis = list(i for i in self.tabuleiro_casas if i.casa_ocupavel == False)
+        self.tabuleiro_casas_nao_ocupaveis = list(i for i in self.tabuleiro_casas if i.casa_ocupavel == "nao")
 
 
 class Jogador():
@@ -198,6 +188,8 @@ class Jogador():
         tabuleiro_casas_ocupaveis_vazias = tabuleiro.tabuleiro_casas_ocupaveis_vazias()
         jogadas_captura = []
         for pedra in self.jogador_pedras:
+            print(pedra.pedra_nome)
+            print(pedra.pedra_ocupando_casa)
             casa = pedra.pedra_ocupando_casa
             x = casa.casa_x
             y = casa.casa_y
@@ -205,34 +197,45 @@ class Jogador():
             d2 = [f"{x}_{y}", f"{x-1}_{y+1}", f"{x-2}_{y+2}"]
             d3 = [f"{x}_{y}", f"{x-1}_{y-1}", f"{x-2}_{y-2}"]
             d4 = [f"{x}_{y}", f"{x+1}_{y-1}", f"{x+2}_{y-2}"]
-            """"""
-            b = d1+d2+d3+d4
+            print(d1,d2,d3,d4)
+            casas_01 = Casa.casas_nomes_casas(casas_nomes=d1)
+            casas_02 = Casa.casas_nomes_casas(casas_nomes=d2)
+            casas_03 = Casa.casas_nomes_casas(casas_nomes=d3)
+            casas_04 = Casa.casas_nomes_casas(casas_nomes=d4)
+            a = casas_01+casas_02+casas_03+casas_04
+
+            pedras_01 = Casa.casas_pedras(casas=casas_01)
+            pedras_02 = Casa.casas_pedras(casas=casas_02)
+            pedras_03 = Casa.casas_pedras(casas=casas_03)
+            pedras_04 = Casa.casas_pedras(casas=casas_04)
+            b = pedras_01+pedras_02+pedras_03+pedras_04
             for i in b:
                 print(i)
-            
-            casas_01 = Casa.casas_nomes_casas(d1)
-            casas_02 = Casa.casas_nomes_casas(d2)
-            casas_03 = Casa.casas_nomes_casas(d3)
-            casas_04 = Casa.casas_nomes_casas(d4)
-            a = casas_01+casas_02+casas_03+casas_04
+            jogadas = [casas_01+pedras_01, casas_02+pedras_02, casas_03+pedras_03, casas_04+pedras_04]
             """
+            print(jogadas)
+            
             for i in a:
                 if i!=False:
                     print(i.casa_ocupada)
+            """
+            """
+            b = d1+d2+d3+d4
+            for i in b:
+                print(i)
             """
             #print(casas_01)
             #print(casas_02)
             #print(casas_03)
             #print(casas_04)
-            pedras_01 = Casa.casas_nomes_pedras(d1)#Casa.casas_pedras(casas_01)
-            pedras_02 = Casa.casas_nomes_pedras(d2)#Casa.casas_pedras(casas_02)
-            pedras_03 = Casa.casas_nomes_pedras(d3)#Casa.casas_pedras(casas_03)
-            pedras_04 = Casa.casas_nomes_pedras(d4)#Casa.casas_pedras(casas_04)
+            #pedras_01 = Casa.casas_nomes_pedras(d1)#Casa.casas_pedras(casas_01)
+            #pedras_02 = Casa.casas_nomes_pedras(d2)#Casa.casas_pedras(casas_02)
+            #pedras_03 = Casa.casas_nomes_pedras(d3)#Casa.casas_pedras(casas_03)
+            #pedras_04 = Casa.casas_nomes_pedras(d4)#Casa.casas_pedras(casas_04)
             #print(pedras_01)
             #print(pedras_02)
             #print(pedras_03)
             #print(pedras_04)
-            jogadas = [casas_01+pedras_01, casas_02+pedras_02, casas_03+pedras_03, casas_04+pedras_04]
             #print(jogadas)
             """
             pedras_01 = [pedra, pedra, pedra, pedra]
