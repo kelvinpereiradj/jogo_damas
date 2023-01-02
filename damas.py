@@ -88,7 +88,7 @@ class Casa():
                 if k.casa_nome==j:
                     d.append(k)
             if j=="False":
-                d.append("False")      
+                d.append("False")
         return d
 
     @staticmethod
@@ -188,8 +188,6 @@ class Jogador():
         tabuleiro_casas_ocupaveis_vazias = tabuleiro.tabuleiro_casas_ocupaveis_vazias()
         jogadas_captura = []
         for pedra in self.jogador_pedras:
-            print(pedra.pedra_nome)
-            print(pedra.pedra_ocupando_casa)
             casa = pedra.pedra_ocupando_casa
             x = casa.casa_x
             y = casa.casa_y
@@ -197,59 +195,34 @@ class Jogador():
             d2 = [f"{x}_{y}", f"{x-1}_{y+1}", f"{x-2}_{y+2}"]
             d3 = [f"{x}_{y}", f"{x-1}_{y-1}", f"{x-2}_{y-2}"]
             d4 = [f"{x}_{y}", f"{x+1}_{y-1}", f"{x+2}_{y-2}"]
-            print(d1,d2,d3,d4)
+            
             casas_01 = Casa.casas_nomes_casas(casas_nomes=d1)
             casas_02 = Casa.casas_nomes_casas(casas_nomes=d2)
             casas_03 = Casa.casas_nomes_casas(casas_nomes=d3)
             casas_04 = Casa.casas_nomes_casas(casas_nomes=d4)
-            a = casas_01+casas_02+casas_03+casas_04
+            
 
             pedras_01 = Casa.casas_pedras(casas=casas_01)
             pedras_02 = Casa.casas_pedras(casas=casas_02)
             pedras_03 = Casa.casas_pedras(casas=casas_03)
             pedras_04 = Casa.casas_pedras(casas=casas_04)
-            b = pedras_01+pedras_02+pedras_03+pedras_04
-            for i in b:
-                print(i)
-            jogadas = [casas_01+pedras_01, casas_02+pedras_02, casas_03+pedras_03, casas_04+pedras_04]
-            """
-            print(jogadas)
-            
-            for i in a:
-                if i!=False:
-                    print(i.casa_ocupada)
-            """
-            """
-            b = d1+d2+d3+d4
-            for i in b:
-                print(i)
-            """
-            #print(casas_01)
-            #print(casas_02)
-            #print(casas_03)
-            #print(casas_04)
-            #pedras_01 = Casa.casas_nomes_pedras(d1)#Casa.casas_pedras(casas_01)
-            #pedras_02 = Casa.casas_nomes_pedras(d2)#Casa.casas_pedras(casas_02)
-            #pedras_03 = Casa.casas_nomes_pedras(d3)#Casa.casas_pedras(casas_03)
-            #pedras_04 = Casa.casas_nomes_pedras(d4)#Casa.casas_pedras(casas_04)
-            #print(pedras_01)
-            #print(pedras_02)
-            #print(pedras_03)
-            #print(pedras_04)
-            #print(jogadas)
-            """
-            pedras_01 = [pedra, pedra, pedra, pedra]
-            pedras_02 = Casa.casas_pedras(casas_02)
-            pedras_03 = Casa.casas_pedras(casas_03)
-            #k = list(zip(casas_01, casas_02, casas_03, pedras_01, pedras_02, pedras_03))
-            kk = list(zip(casas_01,casas_02,casas_03))
-            for i in kk:
-                print(i[0],i[1],i[2])
-            print("oi"*20)
 
-                #print(i[0],i[1],i[2],i[3],i[4],i[5])
-            """
-        return []
+            jogadas = [casas_01+pedras_01, casas_02+pedras_02, casas_03+pedras_03, casas_04+pedras_04]
+            for i in jogadas:
+                a=i[2]
+                b=i[4]
+                try:
+                    if a.casa_ocupada=="nao" and b.pedra_dono_inicial == adversario:
+                        jogadas_captura.append(i)
+                        print(a,b)
+                        print(len(i))
+                    else:
+                        pass
+                except:
+                    pass
+        print("jogadas_captura"+str(jogadas_captura))
+        print(len(jogadas_captura))
+        return jogadas_captura
     
 
     def jogador_buscar_pedra_mover(self, tabuleiro, adversario):
@@ -261,25 +234,25 @@ class Jogador():
 
         
         """
-            print("jogador: (pedra.nome em casa.nome)")
-            print(len(jogador_pedras_casas_nomes))
-            print(list(zip(list(i.pedra_nome for i in self.jogador_pedras), jogador_pedras_casas_nomes)))
+        print("jogador: (pedra.nome em casa.nome)")
+        print(len(jogador_pedras_casas_nomes))
+        print(list(zip(list(i.pedra_nome for i in self.jogador_pedras), jogador_pedras_casas_nomes)))
 
-            print("adversario (pedra.nome em casa.nome)")
-            print(len(adversario_pedras_casas_nomes))
-            print(list(zip( list(i.pedra_nome for i in adversario.jogador_pedras), adversario_pedras_casas_nomes)))
+        print("adversario (pedra.nome em casa.nome)")
+        print(len(adversario_pedras_casas_nomes))
+        print(list(zip( list(i.pedra_nome for i in adversario.jogador_pedras), adversario_pedras_casas_nomes)))
 
-            print("tabuleiro_casas_nomes")
-            print(len(tabuleiro_casas_nomes))
-            print(tabuleiro_casas_nomes)
+        print("tabuleiro_casas_nomes")
+        print(len(tabuleiro_casas_nomes))
+        print(tabuleiro_casas_nomes)
 
-            print("tabuleiro_casas_vazias_nomes")
-            print(len(tabuleiro_casas_vazias_nomes))
-            print(tabuleiro_casas_vazias_nomes)
+        print("tabuleiro_casas_vazias_nomes")
+        print(len(tabuleiro_casas_vazias_nomes))
+        print(tabuleiro_casas_vazias_nomes)
 
-            print("tabuleiro_casas_ocupaveis_vazias_nomes")
-            print(len(tabuleiro_casas_ocupaveis_vazias_nomes))
-            print(tabuleiro_casas_ocupaveis_vazias_nomes)
+        print("tabuleiro_casas_ocupaveis_vazias_nomes")
+        print(len(tabuleiro_casas_ocupaveis_vazias_nomes))
+        print(tabuleiro_casas_ocupaveis_vazias_nomes)
         """
 
         while True:
@@ -326,26 +299,40 @@ class Jogador():
         )
 
 
-    def jogador_vez(self, tabuleiro, adversario):
-        print(self.jogador_nome)
-        jogadas_captura = self.jogador_buscar_pedra_capturar(tabuleiro = tabuleiro, adversario=adversario)
-        if not len(jogadas_captura) > 0:
+    def jogador_vez(self, tabuleiro, adversario, **movimento):
+        print("jogador_vez: "+str(self.jogador_nome))
+        jogadas_capturaa = self.jogador_buscar_pedra_capturar(tabuleiro = tabuleiro, adversario=adversario)
+        if len(jogadas_capturaa) == 0 and not movimento:
             self.jogador_buscar_pedra_mover(tabuleiro = tabuleiro, adversario=adversario)
-
-
+        if len(jogadas_capturaa) > 0 and not movimento:
+            self.jogador_pedra_capturar(jogada = jogadas_capturaa, adversario = adversario, tabuleiro = tabuleiro)
+        if len(jogadas_capturaa)== 0 and movimento:
+            print("passsssssssssss")
+            pass
     def jogador_pedra_mover(self, pedra, jogar_da_casa, jogar_para_casa):
         pedra.pedra_se_mudar(casa_antiga=jogar_da_casa, casa_nova=jogar_para_casa)
 
-    def jogador_pedra_capturar(self, pedra_capturada, pedra_casa):
-        for i in pedra_casa:
-            i.casa_se_desocupar()
-        self.jogador_pedras_capturadas.append(pedra_capturada)
-        pedra_capturada.pedra_dono_novo(dono_novo=self)
-
-
+    def jogador_pedra_capturar(self, jogada, adversario, tabuleiro):
+        while True:
+            jogada_numero = input("Escolha uma jogada da lista: ")
+            print(jogada_numero)
+            a = int(jogada_numero)-1
+            print(a)
+            jogada_escolhida = jogada[a]
+            print(jogada_escolhida)
+            break
+        print("Foi escolhido: "+str(jogada_escolhida))
+        self.jogador_pedra_mover( pedra=jogada_escolhida[3], jogar_da_casa=jogada_escolhida[0], jogar_para_casa=jogada_escolhida[2])
+        a = jogada_escolhida[4]
+        self.jogador_pedras_capturadas.append(a)
+        jogada_escolhida[1].casa_se_desocupar()
+        print(a)
+        print(adversario.instancias)
+        adversario.jogador_pedras.remove(jogada_escolhida[4])
+        self.jogador_vez(tabuleiro=tabuleiro, adversario=adversario, movimento=1)
 class Damas():
     instancias = []
-    def __init__(self):           
+    def __init__(self):
         self.damas_jogadores = self.damas_jogadores_criar()
         self.damas_tabuleiro = self.damas_tabuleiro_criar()
         self.damas_pedras_posicionar(jogadores=self.damas_jogadores, tabuleiro=self.damas_tabuleiro)
@@ -360,7 +347,6 @@ class Damas():
                 adversario = self.damas_jogadores[i[1]]
                 jogando.jogador_vez(tabuleiro = self.damas_tabuleiro, adversario = adversario)
 
-         
     def damas_jogadores_criar(self):
         jogadores = []
         jogadores_quantidade = 2
